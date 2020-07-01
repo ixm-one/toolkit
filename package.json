@@ -2,7 +2,8 @@
   "name": "@ixm-one/toolkit",
   "version": "0.1.0",
   "description": "Provides a set of actions to make creating setup actions easier",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "homepage": "https://github.com/ixm-one/toolkit#readme",
   "author": "Isabella Muerte",
   "license": "MIT",
@@ -22,8 +23,8 @@
     "toolkit"
   ],
   "scripts": {
-    "build": "tsc",
-    "check": "tsc --noEmit && eslint src --ext .ts",
+    "build": "tsc && eslint src --ext .ts",
+    "check": "tsc && eslint src --ext .ts",
     "fix": "npm run check -- --fix"
   },
   "devDependencies": {
@@ -74,7 +75,7 @@
     },
     "parserOptions": {
       "sourceType": "module",
-      "ecmaVersion": 2020
+      "ecmaVersion": 2019
     }
   }
 }

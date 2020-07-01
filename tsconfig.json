@@ -3,10 +3,11 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "target": "es2019",
+    "declaration": true,
     "strict": true,
     "rootDir": "./src",
-    "outDir": "./lib",
+    "outDir": "./dist",
     "newLine": "LF"
   },
-  "exclude": ["node_modules", "**/*.test.ts", ".yarn"]
+  "exclude": ["node_modules", "**/*.test.ts", "dist"]
 }
