@@ -22,9 +22,15 @@
     "setup",
     "toolkit"
   ],
+  "files": [
+    "dist/*.d.ts",
+    "dist/*.js"
+  ],
   "scripts": {
-    "build": "tsc && eslint src --ext .ts",
-    "check": "tsc && eslint src --ext .ts",
+    "build": "tsc",
+    "check": "tsc --noEmit && eslint src --ext .ts",
+    "lint": "eslint src --ext .ts",
+    "build-and-check": "npm run build && npm run lint",
     "fix": "npm run check -- --fix"
   },
   "devDependencies": {

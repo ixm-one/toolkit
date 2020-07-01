@@ -1,8 +1,8 @@
-name: Build and Test
+name: Build
 on: push
 jobs:
   build:
-    name: Build Plugin
+    name: Build and Check
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -15,11 +15,21 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: Locate NPM Directory
-        if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: Find NPM Cache Directory
+        id: npm-cache
+        run: echo "::set-output name=path::$(npm config get cache)"
+      - name: Setup NPM Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache.outputs.path }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: Install Dependencies
         run: npm ci
-      - name: Check Code
-        run: npm run check
+      - name: Build Check Code
+        run: npm run build-and-check --if-present
       #- name: Setup Node for Publishing
       #  with:
       #    registry-url: 'https://npm.pkg.github.com'

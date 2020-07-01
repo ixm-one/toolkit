@@ -3,7 +3,7 @@
 	"tasks": [
     {
       "type": "npm",
-      "script": "build",
+      "script": "check",
       "problemMatcher": [
         "$eslint-compact",
       ],

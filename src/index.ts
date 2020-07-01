@@ -2,14 +2,12 @@ import * as github from '@actions/github';
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
-import * as xdg from 'xdg-basedir';
+import xdg from 'xdg-basedir';
 import { valid } from 'semver';
 
 import * as path from 'path';
 
 import './extract';
-
-type Compression = 'gzip' | 'zip' | '7zip' | 'auto';
 
 const TOKEN = process.env.ACTION_RUNTIME_TOKEN ?? '';
 const CACHE = xdg.cache ?? __dirname;
