@@ -5,10 +5,10 @@ updates:
     schedule:
       timezone: America/Los_Angeles
       interval: daily
-      time: 12:00
+      time: "12:00"
   - package-ecosystem: npm
     directory: /
     schedule:
       timezone: America/Los_Angeles
       interval: daily
-      time: 12:00
+      time: "12:00"
