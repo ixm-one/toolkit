@@ -31,6 +31,7 @@ jobs:
       - name: Build Check Code
         run: npm run build-and-check --if-present
       - name: Setup Node for Publishing
+        uses: actions/setup-node@v1
         with:
           registry-url: 'https://npm.pkg.github.com'
           node-version: '12.x'
