@@ -30,11 +30,11 @@ jobs:
         run: npm ci
       - name: Build Check Code
         run: npm run build-and-check --if-present
-      #- name: Setup Node for Publishing
-      #  with:
-      #    registry-url: 'https://npm.pkg.github.com'
-      #    node-version: '12.x'
-      #- name: Publish to GitHub
-      #  run: npm publish
-      #  env:
-      #    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node for Publishing
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          node-version: '12.x'
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
