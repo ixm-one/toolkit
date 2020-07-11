@@ -42,7 +42,7 @@
     "@types/eslint-plugin-prettier": "3.1.0",
     "@types/eslint": "6.8.0",
     "@types/prettier": "2.0.0",
-    "@types/semver": "7.1.0",
+    "@types/semver": "7.3.1",
     "@types/node": "^13.13.2",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
