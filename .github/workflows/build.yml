@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.1.0
         with:
           node-version: '12.x'
       - name: Find NPM Cache Directory
@@ -36,7 +36,7 @@ jobs:
   #  needs: build
   #  steps:
   #    - name: Setup Node
-  #      uses: actions/setup-node@v1
+  #      uses: actions/setup-node@v2.1.0
   #      with:
   #        registry-url: 'https://npm.pkg.github.com'
   #        node-version: '12.x'
