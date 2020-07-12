@@ -6,7 +6,8 @@ updates:
       timezone: America/Los_Angeles
       interval: daily
       time: "12:00"
-    prefix: 👷
+    commit-message:
+      prefix: 👷
   - package-ecosystem: npm
     directory: /
     schedule:
