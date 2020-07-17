@@ -34,7 +34,7 @@
     "fix": "npm run check -- --fix"
   },
   "devDependencies": {
-    "@actions/tool-cache": "^1.3.5",
+    "@actions/tool-cache": "^1.6.0",
     "@actions/core": "^1.2.4",
     "@actions/github": "^4.0.0",
     "@actions/glob": "^0.1.0",
