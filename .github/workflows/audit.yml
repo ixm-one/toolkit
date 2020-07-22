@@ -2,12 +2,16 @@ name: Audit
 on:
   push:
     branches:
-      - master
-    paths-ignore:
-      - '**.md'
+      - main
+    paths:
+      - 'src/**.ts'
+      - 'package-lock.json'
+      - 'package.json'
   pull_request:
-    paths-ignore:
-      - '**.md'
+    paths:
+      - 'src/**.ts'
+      - 'package-lock.json'
+      - 'package.json'
 jobs:
   audit:
     name: Audit
