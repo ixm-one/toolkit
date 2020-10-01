@@ -34,7 +34,7 @@
     "fix": "npm run check -- --fix"
   },
   "devDependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "@actions/glob": "^0.1.0",
     "@actions/io": "^1.0.2",
