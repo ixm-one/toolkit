@@ -7,6 +7,7 @@ import { valid } from 'semver';
 
 import * as path from 'path';
 
+import * as local from './github';
 import './cache';
 
 const CACHE = xdg.cache ?? __dirname;
@@ -51,18 +52,15 @@ export async function releases(
   repo: string,
   options?: ReleaseFilterOptions
 ) {
-  const auth = options?.token ?? token('');
   const validate = options?.validate ?? valid;
+  const matcher = options?.assetMatcher ?? ((_: Asset) => true);
   core.debug(`Retrieving list of '${owner}/${repo}' releases`);
-  const instance = github.getOctokit(auth);
+  const instance = local.client(options?.token);
   const { data: releases } = await instance.repos.listReleases({ owner, repo });
   return releases.filter((release) => {
-    return (
-      release.assets.find(
-        (asset) =>
-          options?.assetMatcher(asset) &&
-          (!release.prerelease || options?.prerelease)
-      ) && validate(release.tag_name)
-    );
+    const selector = (asset: Asset) => {
+      return matcher(asset) && (!release.prerelease || options?.prerelease);
+    };
+    return release.assets.find(selector) && validate(release.tag_name);
   });
 }

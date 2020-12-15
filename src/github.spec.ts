@@ -1,7 +1,8 @@
 import * as library from './github';
 
 test('github.client(...) should be authenticated under github actions', () => {
-  const actions = process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
+  const actions =
+    process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
   const token = library.token();
   const client = library.client(token ?? '');
 });

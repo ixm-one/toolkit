@@ -4,9 +4,7 @@ import * as path from 'path';
 import { valid } from 'semver';
 
 test.todo('clients should be authenticated under github actions');
-test.todo('ninja-build should return a single asset', () => {
-  return false;
-});
+test.todo('ninja-build should return a single asset');
 test.todo('sccache should return multiple releases');
 test.todo('sccache should return a single asset');
 test.todo('cmake should return multiple releases');
@@ -21,22 +19,30 @@ it('should return a path', () => {
   expect(directory).toEqual(path.join(xdg.cache ?? __dirname, 'tests'));
 });
 
-it('should return an empty string', () => {
-  expect(library.token(undefined)).toBe('');
-});
-
 it('should return the given string', () => {
   const token = library.token('test');
   expect(token).toBe('test');
 });
 
-it('should return a non-zero list', () => {
-  expect(library.releases('ninja-build', 'ninja')).resolves.toBeTruthy();
+describe('ninja-build', () => {
+  it('should return a non-zero list of releases', async () => {
+    const releases = await library.releases('ninja-build', 'ninja');
+    expect(releases).toBeTruthy();
+    expect(releases.length).toBeTruthy();
+  });
 });
 
-it('should return a single asset', () => {
-  expect(library.releases('ninja-build', 'ninja')).resolves.toHaveLength(1);
+describe('sccache', () => {
+  it('should return a non-zero list of releases', async () => {
+    const releases = await library.releases('mozilla', 'sccache');
+    expect(releases).toBeTruthy();
+  });
 });
+
+//it('should return a single asset', async () => {
+//  const releases = await library.releases('ninja-build', 'ninja');
+//  expect(releases).toBeTruthy();
+//});
 
 //it('should download a zip file', () => {
 //  const suffix = ((): string => {
