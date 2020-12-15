@@ -9,7 +9,6 @@ import * as path from 'path';
 
 import './extract';
 
-const TOKEN = process.env.ACTION_RUNTIME_TOKEN ?? '';
 const CACHE = xdg.cache ?? __dirname;
 
 export interface Asset {
@@ -39,7 +38,7 @@ export function cache(location: string) {
 }
 
 export function token(value?: string) {
-  return core.getInput('github-token') ?? value ?? TOKEN;
+  return (core.getInput('github-token') || value) ?? '';
 }
 
 export async function acquire(location: string) {
@@ -52,7 +51,7 @@ export async function releases(
   repo: string,
   options?: ReleaseFilterOptions
 ) {
-  const token = options?.token ?? TOKEN;
+  const token = options?.token ?? '';
   const validate = options?.validate ?? valid;
   core.debug(`Retrieving list of '${owner}/${repo}' releases`);
   const instance = github.getOctokit(token);
