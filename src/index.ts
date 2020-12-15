@@ -37,7 +37,7 @@ export function cache(location: string) {
   return path.join(CACHE, location);
 }
 
-export function token(value?: string) {
+export function token(value?: string): string {
   return (core.getInput('github-token') || value) ?? '';
 }
 
@@ -51,10 +51,10 @@ export async function releases(
   repo: string,
   options?: ReleaseFilterOptions
 ) {
-  const token = options?.token ?? '';
+  const auth = options?.token ?? token('');
   const validate = options?.validate ?? valid;
   core.debug(`Retrieving list of '${owner}/${repo}' releases`);
-  const instance = github.getOctokit(token);
+  const instance = github.getOctokit(auth);
   const { data: releases } = await instance.repos.listReleases({ owner, repo });
   return releases.filter((release) => {
     return (
