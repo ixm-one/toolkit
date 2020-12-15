@@ -7,7 +7,7 @@ import { valid } from 'semver';
 
 import * as path from 'path';
 
-import './extract';
+import './cache';
 
 const CACHE = xdg.cache ?? __dirname;
 
@@ -37,8 +37,8 @@ export function cache(location: string) {
   return path.join(CACHE, location);
 }
 
-export function token(value?: string): string {
-  return (core.getInput('github-token') || value) ?? '';
+export function token(value?: string): string | undefined {
+  return (core.getInput('github-token') || process.env.GITHUB_TOKEN) ?? value;
 }
 
 export async function acquire(location: string) {
