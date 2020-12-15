@@ -15,3 +15,7 @@ it('should return the given string', () => {
   const token = library.token('test');
   expect(token).toBe('test');
 });
+
+it('should return a non-zero list', () => {
+  expect(library.releases('ninja-build', 'ninja')).resolves.toBeTruthy();
+});
