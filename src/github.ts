@@ -18,9 +18,8 @@ export function client(token?: string, options?: OctokitOptions): GitHub {
   if (isGitHubActions()) {
     return github.getOctokit(token ?? '', options);
   } else {
-    core.warning(
-      'Not running under GitHub Actions, unauthenticated instance returned'
-    );
+    console.warn('Not running under GitHub Actions.');
+    console.warn('Unauthenticated instance returned.');
     return new GitHub();
   }
 }
