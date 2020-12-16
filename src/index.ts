@@ -54,8 +54,9 @@ export async function releases(
 ) {
   const validate = options?.validate ?? valid;
   const matcher = options?.assetMatcher ?? ((_: Asset) => true);
+  const token = local.token(options?.token);
   core.debug(`Retrieving list of '${owner}/${repo}' releases`);
-  const instance = local.client(options?.token);
+  const instance = local.client(token);
   const { data: releases } = await instance.repos.listReleases({ owner, repo });
   return releases.filter((release) => {
     const selector = (asset: Asset) => {
