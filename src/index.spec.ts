@@ -30,8 +30,3 @@ it('should return a path', () => {
   const directory = library.cache('tests');
   expect(directory).toEqual(path.join(xdg.cache ?? __dirname, 'tests'));
 });
-
-it('should return the given string', () => {
-  const token = library.token('test');
-  expect(token).toBe('test');
-});
