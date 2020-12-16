@@ -16,7 +16,7 @@ export function token(value?: string): string | undefined {
 
 export function client(token?: string, options?: OctokitOptions): GitHub {
   if (isGitHubActions()) {
-    if (!token || !options?.auth) {
+    if (!token && !options?.auth) {
       throw new Error(`'token' or 'options.auth' is required`);
     }
     if (token && options?.auth) {
