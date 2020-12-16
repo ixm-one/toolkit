@@ -11,7 +11,7 @@ function isGitHubActions(): boolean {
 
 export function token(value?: string): string | undefined {
   value ||= undefined;
-  return (core.getInput('github-token') || process.env.GITHUB_TOKEN) ?? value;
+  return value ?? (core.getInput('github-token') || process.env.GITHUB_TOKEN);
 }
 
 export function client(token?: string, options?: OctokitOptions): GitHub {
