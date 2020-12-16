@@ -4,6 +4,7 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/build.yml
       - 'src/**.ts'
       - 'package-lock.json'
       - 'package.json'
@@ -42,3 +43,5 @@ jobs:
         run: npm run build-and-check --if-present
       - name: Run Tests
         run: npm run test
+        env:
+          GITHUB_TOKEN: ${{github.token}}
