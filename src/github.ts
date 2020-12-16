@@ -16,6 +16,12 @@ export function token(value?: string): string | undefined {
 
 export function client(token?: string, options?: OctokitOptions): GitHub {
   if (isGitHubActions()) {
+    if (!token || !options?.auth) {
+      throw new Error(`'token' or 'options.auth' is required`);
+    }
+    if (token && options?.auth) {
+      throw new Error(`Cannot set both 'token' or 'options.auth'`);
+    }
     return github.getOctokit(token ?? '', options);
   } else {
     console.warn('Not running under GitHub Actions.');

@@ -2,13 +2,27 @@ import * as library from './index';
 import xdg from 'xdg-basedir';
 import * as path from 'path';
 import { valid } from 'semver';
+import { token } from './github';
+
+describe('assets', () => {
+  it.todo('ninja-build should return a single asset');
+  it.todo('sccache should return a single asset');
+  it.todo('cmake should return a single asset');
+});
+
+describe.each([
+  ['mozilla', 'sccache'],
+  ['ninja-build', 'ninja'],
+  ['kitware', 'cmake'],
+])('toolkit.releases', (user, repo) => {
+  it(`${user}/${repo} should return multiple releases`, async () => {
+    const releases = await library.releases(user, repo);
+    expect(releases).toBeTruthy();
+    expect(releases.length).toBeTruthy();
+  });
+});
 
 test.todo('clients should be authenticated under github actions');
-test.todo('ninja-build should return a single asset');
-test.todo('sccache should return multiple releases');
-test.todo('sccache should return a single asset');
-test.todo('cmake should return multiple releases');
-test.todo('cmake should return a single asset');
 test.todo('the correct extraction function should be selected');
 it('should be valid', () => {
   expect(valid('3.19.1-rc1')).toBeTruthy();
@@ -22,21 +36,6 @@ it('should return a path', () => {
 it('should return the given string', () => {
   const token = library.token('test');
   expect(token).toBe('test');
-});
-
-describe('ninja-build', () => {
-  it('should return a non-zero list of releases', async () => {
-    const releases = await library.releases('ninja-build', 'ninja');
-    expect(releases).toBeTruthy();
-    expect(releases.length).toBeTruthy();
-  });
-});
-
-describe('sccache', () => {
-  it('should return a non-zero list of releases', async () => {
-    const releases = await library.releases('mozilla', 'sccache');
-    expect(releases).toBeTruthy();
-  });
 });
 
 //it('should return a single asset', async () => {
