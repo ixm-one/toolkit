@@ -29,11 +29,15 @@ jobs:
         run: npm ci
       - name: Build and Check Code
         run: npm run build-and-check --if-present
+      - name: Run Tests
+        run: npm run test
+        env:
+          GITHUB_TOKEN: ${{github.token}}
       - name: Setup GitHub Packages
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2-beta
         with:
           registry-url: 'https://npm.pkg.github.com'
-          node-version: '12.x'
+          node-version: '14.x'
       - name: Publish to GitHub Packages
         run: npm publish
         env:
