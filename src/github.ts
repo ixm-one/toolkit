@@ -9,9 +9,9 @@ function isGitHubActions(): boolean {
   return process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
 }
 
-export function token(value?: string): string | undefined {
-  value ||= undefined;
-  return value ?? (core.getInput('github-token') || process.env.GITHUB_TOKEN);
+export function token(input?: string): string | undefined {
+  const token = core.getInput(input || 'github-token');
+  return token || core.getInput('github-token') || process.env.GITHUB_TOKEN;
 }
 
 export function client(token?: string, options?: OctokitOptions): GitHub {

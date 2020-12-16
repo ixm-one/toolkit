@@ -22,6 +22,7 @@ describe('github.token(user-defined-value)', () => {
     expect(library.token()).toBeUndefined();
   });
   it('should return a valid input', () => {
+    process.env['INPUT_TEST'] = 'test';
     expect(library.token('test')).toBeDefined();
     expect(library.token('test')).toBe('test');
   });
