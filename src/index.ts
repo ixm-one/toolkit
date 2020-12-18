@@ -8,7 +8,7 @@ import { valid } from 'semver';
 import * as path from 'path';
 
 import * as local from './github';
-import './cache';
+import './archive';
 
 const CACHE = xdg.cache ?? __dirname;
 
@@ -44,10 +44,6 @@ export interface ReleaseFilterOptions {
 
 export function cache(location: string) {
   return path.join(CACHE, location);
-}
-
-export function token(value?: string): string | undefined {
-  return (core.getInput('github-token') || process.env.GITHUB_TOKEN) ?? value;
 }
 
 export async function acquire(location: string) {
