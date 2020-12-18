@@ -1,4 +1,3 @@
-import * as github from '@actions/github';
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
@@ -7,7 +6,7 @@ import { valid } from 'semver';
 
 import * as path from 'path';
 
-import * as local from './github';
+import * as github from './github';
 import './archive';
 
 const CACHE = xdg.cache ?? __dirname;
@@ -57,10 +56,11 @@ export async function releases(
   options?: ReleaseFilterOptions
 ) {
   const validate = options?.validate ?? valid;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const matcher = options?.assetMatcher ?? ((_: Asset) => true);
-  const token = local.token(options?.token);
+  const token = github.token(options?.token);
   core.debug(`Retrieving list of '${owner}/${repo}' releases`);
-  const instance = local.client(token);
+  const instance = github.client(token);
   const { data: releases } = await instance.repos.listReleases({ owner, repo });
   return releases.filter((release) => {
     const selector = (asset: Asset) => {

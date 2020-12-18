@@ -1,11 +1,11 @@
 import * as library from './github';
 
-test('github.client(...) should be authenticated under github actions', () => {
-  const actions =
-    process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
-  const token = library.token();
-  const client = library.client(token ?? '');
-});
+//test('github.client(...) should be authenticated under github actions', () => {
+//  const actions =
+//    process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
+//  const token = library.token();
+//  const client = library.client(token ?? '');
+//});
 
 describe('github.token(user-defined-value)', () => {
   const environment = process.env;
