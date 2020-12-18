@@ -42,6 +42,14 @@ jobs:
       - name: Build and Check Code
         run: npm run build-and-check --if-present
       - name: Run Tests
-        run: npm run test
+        run: npm test
         env:
           GITHUB_TOKEN: ${{github.token}}
+      - name: Upload Code Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          directory: coverage
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage-final.json

@@ -12,6 +12,8 @@ import './cache';
 
 const CACHE = xdg.cache ?? __dirname;
 
+type AssetSelector = (assets: Asset[]) => Asset;
+
 export interface Asset {
   url: string;
   browser_download_url: string;
@@ -25,6 +27,12 @@ export interface Asset {
   download_count: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface AssetFilterOptions {
+  windows: string | RegExp | AssetSelector;
+  linux: string | RegExp | AssetSelector;
+  macos: string | RegExp | AssetSelector;
 }
 
 export interface ReleaseFilterOptions {
