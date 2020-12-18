@@ -49,7 +49,6 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
-          directory: coverage
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage-final.json
+          file: coverage/coverage-final.json
