@@ -12,19 +12,18 @@ describe('github.client', () => {
   afterAll(() => {
     process.env = environment;
   });
+
   it('should throw an error when there is no token or options.auth', () => {
     expect(() => {
       library.client();
     }).toThrow();
   });
+  it('should throw an error when there is both a token and options.auth', () => {
+    expect(() => {
+      library.client('foo', { auth: 'unauthenticated' });
+    }).toThrow();
+  });
 });
-
-//test('github.client(...) should be authenticated under github actions', () => {
-//  const actions =
-//    process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
-//  const token = library.token();
-//  const client = library.client(token ?? '');
-//});
 
 describe('github.token(user-defined-value)', () => {
   const environment = process.env;
