@@ -14,15 +14,18 @@ export function token(input?: string): string | undefined {
   return token || core.getInput('github-token') || process.env.GITHUB_TOKEN;
 }
 
-export function client(token?: string, options?: OctokitOptions): GitHub {
+export function client(authToken?: string, options?: OctokitOptions): GitHub {
   if (isGitHubActions()) {
-    if (!token && !options?.auth) {
-      throw new Error(`'token' or 'options.auth' is required`);
+    if (!options?.auth) {
+      authToken ||= token();
     }
-    if (token && options?.auth) {
+    if (!authToken && !options?.auth) {
+      throw new Error(`'authToken' or 'options.auth' is required`);
+    }
+    if (authToken && options?.auth) {
       throw new Error(`Cannot set both 'token' or 'options.auth'`);
     }
-    return github.getOctokit(token ?? '', options);
+    return github.getOctokit(authToken ?? '', options);
   } else {
     console.warn('Not running under GitHub Actions.');
     console.warn('Unauthenticated instance returned.');
