@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
 import type { Matcher, Filter, Asset, Release } from './types';
-import { matcher } from './types';
+import { seeker } from './types';
 import { valid } from 'semver';
 import * as github from './github';
 import './archive';
@@ -53,7 +53,7 @@ export async function asset(
   options?: ReleaseFilterOptions
 ) {
   const searchables = await releases(owner, repo, options);
-  const selector = matcher<Asset>(
+  const selector = seeker<Asset>(
     (() => {
       switch (process.platform) {
         case 'darwin':

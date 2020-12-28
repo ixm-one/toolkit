@@ -71,13 +71,13 @@ function isRegExp(object: unknown): object is RegExp {
  * *is not* a valid `Matcher<T>` and what can be used to seek out a given `T`
  *
  * ```typescript
- *   const m = matcher<Release>(/v1.0.0/);
- *   const m = matcher<Release>("v1.0.0");
+ *   const m = seeker<Release>(/v1.0.0/);
+ *   const m = seeker<Release>("v1.0.0");
  * ```
  */
-export function matcher<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
+export function seeker<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
   if (isString(m)) {
-    return matcher<T>(new RegExp(m, 'i'));
+    return seeker<T>(new RegExp(m, 'i'));
   } else if (isRegExp(m)) {
     return (items: T[]) => {
       return items.find((item) => item.name.match(m));
