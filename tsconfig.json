@@ -9,5 +9,12 @@
     "outDir": "./dist",
     "newLine": "LF"
   },
-  "exclude": ["node_modules", "**/*.spec.ts", "dist"]
+  "exclude": ["node_modules", "**/*.spec.ts", "dist"],
+  "typedocOptions": {
+    "inputFiles": ["./src/index.ts"],
+    "exclude": "**/**.spec.ts",
+    "theme": "minimal",
+    "mode": "modules",
+    "out": "docs"
+  }
 }
