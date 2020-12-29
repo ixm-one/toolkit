@@ -85,3 +85,32 @@ describe('github.token(`core.getInput(github-token)`)', () => {
     expect(library.token('test2')).toBe('test');
   });
 });
+
+describe('github.version', () => {
+  const environment = process.env;
+  beforeAll(() => {
+    process.env = { ...environment };
+    delete process.env['INPUT_HUGO-VERSION'];
+  });
+  afterAll(() => {
+    process.env = environment;
+  });
+  it('should return core.getInput("hugo-version")', () => {
+    process.env['INPUT_HUGO-VERSION'] = '0.79';
+    expect(library.version('hugo')).toBe('0.79');
+  });
+  it('should return an invalid semver range', () => {
+    process.env['INPUT_HUGO-VERSION'] = '^1^';
+    expect(library.version('hugo')).toBe(undefined);
+  });
+  it('should return any value', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const validator = (_: string) => {
+      return true;
+    };
+    process.env['INPUT_HUGO-VERSION'] = '';
+    expect(library.version('hugo', validator)).toBe('');
+    process.env['INPUT_HUGO-VERSION'] = 'just-words';
+    expect(library.version('hugo', validator)).toBe('just-words');
+  });
+});
