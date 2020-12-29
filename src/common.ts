@@ -55,6 +55,7 @@ function isRegExp(object: unknown): object is RegExp {
  *   const m = seeker<Release>(/v1.0.0/);
  *   const m = seeker<Release>("v1.0.0");
  * ```
+ * @internal
  */
 export function seeker<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
   if (isString(m)) {

@@ -8,6 +8,10 @@ import * as common from './common';
 import * as input from './input';
 import './archive';
 
+export { getToken, getToolVersion } from './input';
+export { warn, debug, error } from './common';
+export { client } from './github';
+
 export interface AssetFilterOptions {
   windows: Matcher<Asset>;
   linux: Matcher<Asset>;
@@ -22,6 +26,7 @@ export interface ReleaseFilterOptions {
   token?: string;
 }
 
+/* TODO: Move to common */
 export async function acquire(location: string) {
   common.debug(`Downloading ${location}`);
   return await tc.downloadTool(location);

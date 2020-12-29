@@ -24,3 +24,15 @@ describe('github.client', () => {
     }).toThrow();
   });
 });
+
+describe.each([
+  ['ninja-build', 'ninja'],
+  ['mozilla', 'sccache'],
+  ['kitware', 'cmake'],
+])('github.releases)', (user, repo) => {
+  it(`github.releases(${user}/${repo}) should return multiple releases`, async () => {
+    const releases = await github.releases(user, repo);
+    expect(releases).toBeTruthy();
+    expect(releases.length).toBeTruthy();
+  });
+});
