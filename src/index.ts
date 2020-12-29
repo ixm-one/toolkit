@@ -1,10 +1,11 @@
-import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
-import type { Matcher, Filter, Asset, Release } from './types';
-import { seeker } from './types';
+import type { Matcher, Filter } from './common';
+import type { Asset, Release } from './types';
 import { valid } from 'semver';
 import * as github from './github';
+import * as common from './common';
+import * as input from './input';
 import './archive';
 
 export interface AssetFilterOptions {
@@ -22,7 +23,7 @@ export interface ReleaseFilterOptions {
 }
 
 export async function acquire(location: string) {
-  core.debug(`Downloading ${location}`);
+  common.debug(`Downloading ${location}`);
   return await tc.downloadTool(location);
 }
 
@@ -34,8 +35,8 @@ export async function releases(
   const validate = options?.validate ?? valid;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const matcher = options?.assetMatcher ?? ((_: Asset) => true);
-  const token = github.token(options?.token);
-  core.debug(`Retrieving list of '${owner}/${repo}' releases`);
+  const token = input.getToken(options?.token);
+  common.debug(`Retrieving list of '${owner}/${repo}' releases`);
   const instance = github.client(token);
   const { data: releases } = await instance.repos.listReleases({ owner, repo });
   return releases.filter((release) => {
@@ -53,7 +54,7 @@ export async function asset(
   options?: ReleaseFilterOptions
 ) {
   const searchables = await releases(owner, repo, options);
-  const selector = seeker<Asset>(
+  const selector = common.seeker<Asset>(
     (() => {
       switch (process.platform) {
         case 'darwin':
@@ -65,5 +66,5 @@ export async function asset(
       }
     })()
   );
-  core.debug(`Filtering assets for ${process.platform}`);
+  common.debug(`Filtering assets for ${process.platform}`);
 }

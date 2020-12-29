@@ -92,6 +92,5 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
-  },
-  "dependencies": {}
+  }
 }

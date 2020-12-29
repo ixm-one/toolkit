@@ -13,8 +13,7 @@
   "typedocOptions": {
     "inputFiles": ["./src/index.ts"],
     "exclude": "**/**.spec.ts",
-    "theme": "minimal",
     "mode": "modules",
-    "out": "docs"
+    "out": "dist/docs"
   }
 }
