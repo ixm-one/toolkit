@@ -93,6 +93,7 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "testTimeout": 10000,
     "setupFiles": ["dotenv/config"],
     "watchPathIgnorePatterns": ["<rootDir>/node_modules/"]
   }

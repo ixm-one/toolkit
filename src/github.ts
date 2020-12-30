@@ -1,5 +1,4 @@
 import * as github from '@actions/github';
-import { GitHub } from '@actions/github/lib/utils';
 import { validRange } from 'semver';
 
 import type { Matcher, Filter } from './common';
@@ -154,6 +153,16 @@ export async function releases(
   return releases.filter((release) => filter(release));
 }
 
-export async function asset(releases: Release[], options?: AssetOptions) {
+/**
+ * This is typically the next step after receiving a list of releases from
+ * [[`releases`]], and is used to more effectively whittle down the list from
+ * many to a single one.
+ * @param releases A list of releases from which to select a single one from
+ */
+export function select(releases: Release[]): Release {
+  return releases[0];
+}
+
+export async function asset(release: Release, options?: AssetOptions) {
   return;
 }
