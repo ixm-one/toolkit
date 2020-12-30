@@ -30,7 +30,7 @@ describe.each([
   ['ninja-build', 'ninja'],
   ['mozilla', 'sccache'],
   ['kitware', 'cmake'],
-])('github.releases)', (owner, repo) => {
+])('github.releases', (owner, repo) => {
   it(`github.releases(${owner}, ${repo}) should return multiple releases`, async () => {
     expect(github.releases(owner, repo)).resolves.not.toEqual([]);
   });
@@ -42,22 +42,17 @@ describe.each([
     const array = expect.arrayContaining(await releases);
     expect(prereleases).resolves.toEqual(array);
   });
+});
+describe.each([
+  ['ninja-build', 'ninja'],
+  ['mozilla', 'sccache'],
+  ['kitware', 'cmake'],
+])('github.select', (owner, repo) => {
   /* This is the current *default* implementation of github.select, but is here for testing purposes */
   it(`github.select(github.releases(${owner}, ${repo})) should return a single release`, async () => {
-    const release = github.releases(owner, repo).then((releases: Release[]) => {
-      const version = getToolVersion(repo) || '*';
-      const versions = releases
-        .map((release) => coerce(release.tag_name))
-        .filter((version): version is SemVer => version !== null);
-      return releases.find((release: Release) => {
-        const max = maxSatisfying(versions, version);
-        /* This is always non-nullable because it wouldn't be in this list to
-         * begin with since we filtered before hand
-         */
-        const tag = coerce(release.tag_name) as NonNullable<SemVer>;
-        return max?.version === tag.version;
-      });
-    });
+    const release = github
+      .releases(owner, repo)
+      .then((releases: Release[]) => github.select(releases, repo));
     expect(release).resolves.toBeDefined();
   });
 });

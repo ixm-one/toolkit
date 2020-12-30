@@ -1,5 +1,5 @@
 import * as github from '@actions/github';
-import { validRange } from 'semver';
+import { coerce, maxSatisfying, SemVer, validRange } from 'semver';
 
 import type { Matcher, Filter } from './common';
 import * as input from './input';
@@ -79,6 +79,10 @@ export interface ReleaseOptions {
   token?: string;
 }
 
+type SelectPredicate =
+  | ((release: Release) => boolean)
+  | ((release: Release, releases: Release[]) => boolean);
+
 /**
  * @returns A [[GitHub]] object with better defaults. If not running under
  * GitHub Actions, this function returns an unauthenticated client. This is
@@ -156,11 +160,33 @@ export async function releases(
 /**
  * This is typically the next step after receiving a list of releases from
  * [[`releases`]], and is used to more effectively whittle down the list from
- * many to a single one.
+ * many to a single one. Unlike other functions, this is not as convertible as
+ * one might think, and simply takes a 'find' function but will filter out
+ * versions that cannot be coerced to SemVer. These instances are fairly rare,
+ * as SemVer as a coerce-able format is more common than the semantics that
+ * SemVer expects.
  * @param releases A list of releases from which to select a single one from
  */
-export function select(releases: Release[]): Release {
-  return releases[0];
+export function select(
+  releases: Release[],
+  toolName: string,
+  predicate?: SelectPredicate
+) {
+  const version = input.getToolVersion(toolName) || '*';
+  const versions = releases
+    .map((release) => coerce(release.tag_name))
+    .filter((version): version is SemVer => version !== null);
+  const find =
+    predicate ??
+    ((release: Release) => {
+      const max = maxSatisfying(versions, version);
+      const tag = coerce(release.tag_name) as NonNullable<SemVer>;
+      /* This is always non-nullable because it wouldn't be in this list to
+       * begin with since we filtered before hand
+       */
+      return max?.version === tag.version;
+    });
+  return releases.find((release, _, releases) => find(release, releases));
 }
 
 export async function asset(release: Release, options?: AssetOptions) {
