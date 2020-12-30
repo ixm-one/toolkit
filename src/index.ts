@@ -1,5 +1,3 @@
-import type { AssetOptions, Asset } from './github';
-
 export { warn, debug, error, acquire } from './common';
 export { getToken, getToolVersion } from './input';
 export { client, releases } from './github';

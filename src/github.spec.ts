@@ -1,6 +1,4 @@
-import { maxSatisfying, coerce, SemVer } from 'semver';
 import type { Release } from './github';
-import { getToolVersion } from './input';
 import * as github from './github';
 
 describe('github.client', () => {
@@ -31,10 +29,10 @@ describe.each([
   ['mozilla', 'sccache'],
   ['kitware', 'cmake'],
 ])('github.releases', (owner, repo) => {
-  it(`github.releases(${owner}, ${repo}) should return multiple releases`, async () => {
+  it(`github.releases('${owner}', '${repo}') should return multiple releases`, async () => {
     expect(github.releases(owner, repo)).resolves.not.toEqual([]);
   });
-  it(`github.releases(${owner}, ${repo}, { prereleases: true }) should return multiple releases`, async () => {
+  it(`github.releases('${owner}', '${repo}', { prereleases: true }) should return multiple releases`, async () => {
     const prereleases = github.releases(owner, repo, { prereleases: true });
     const releases = github.releases(owner, repo);
     expect(prereleases).resolves.not.toEqual([]);
@@ -49,10 +47,14 @@ describe.each([
   ['kitware', 'cmake'],
 ])('github.select', (owner, repo) => {
   /* This is the current *default* implementation of github.select, but is here for testing purposes */
-  it(`github.select(github.releases(${owner}, ${repo})) should return a single release`, async () => {
+  it(`github.select(github.releases('${owner}', '${repo}')) should return a single release`, async () => {
     const release = github
       .releases(owner, repo)
       .then((releases: Release[]) => github.select(releases, repo));
     expect(release).resolves.toBeDefined();
+    expect(release).resolves.toHaveProperty('assets');
+  });
+  it(`github.select([], '${repo}') should return undefined`, () => {
+    expect(github.select([], repo)).toBeUndefined();
   });
 });
