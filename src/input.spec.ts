@@ -79,10 +79,7 @@ describe('github.getToolVersion', () => {
     expect(getToolVersion('hugo')).toBe(undefined);
   });
   it('should return any value', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const validator = (_: string) => {
-      return true;
-    };
+    const validator = () => true;
     process.env['INPUT_HUGO-VERSION'] = '';
     expect(getToolVersion('hugo', validator)).toBe('');
     process.env['INPUT_HUGO-VERSION'] = 'just-words';

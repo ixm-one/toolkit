@@ -1,9 +1,7 @@
 import * as github from './github';
 
 describe('github.client', () => {
-  const CI = process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
   const environment = process.env;
-  const it = CI ? test : test.skip;
   beforeAll(() => {
     process.env = { ...environment };
     delete process.env['INPUT_GITHUB-TOKEN'];
@@ -14,14 +12,14 @@ describe('github.client', () => {
   });
 
   it('should throw an error when there is no token or options.auth', () => {
-    expect(() => {
-      github.client();
-    }).toThrow();
+    expect(() => github.client()).toThrow();
   });
   it('should throw an error when there is both a token and options.auth', () => {
-    expect(() => {
-      github.client('foo', { auth: 'unauthenticated' });
-    }).toThrow();
+    expect(() => github.client('foo', { auth: 'unauthenticated' })).toThrow();
+  });
+  it('should return a valid client when GITHUB_TOKEN exists', () => {
+    process.env = environment;
+    expect(github.client()).toBeDefined();
   });
 });
 
@@ -29,10 +27,18 @@ describe.each([
   ['ninja-build', 'ninja'],
   ['mozilla', 'sccache'],
   ['kitware', 'cmake'],
-])('github.releases)', (user, repo) => {
-  it(`github.releases(${user}/${repo}) should return multiple releases`, async () => {
-    const releases = await github.releases(user, repo);
-    expect(releases).toBeTruthy();
-    expect(releases.length).toBeTruthy();
+])('github.releases)', (owner, repo) => {
+  it(`github.releases(${owner}, ${repo}) should return multiple releases`, async () => {
+    const releases = github.releases(owner, repo);
+    expect(releases).resolves.toBeTruthy();
+    expect((await releases).length).toBeTruthy();
+  });
+  it(`github.releases(${owner}, ${repo}, { prereleases: true }) should return multiple releases`, async () => {
+    const prereleases = github.releases(owner, repo, { prereleases: true });
+    const releases = github.releases(owner, repo);
+    expect(prereleases).resolves.toBeTruthy();
+    expect(releases).resolves.toBeTruthy();
+    const array = expect.arrayContaining(await releases);
+    expect(prereleases).resolves.toEqual(array);
   });
 });

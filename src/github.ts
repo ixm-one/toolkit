@@ -1,14 +1,9 @@
-/* TODO: This should all be moved to index.ts */
 import * as github from '@actions/github';
 import { GitHub } from '@actions/github/lib/utils';
-import { valid } from 'semver';
+import { validRange } from 'semver';
 
 import type { Matcher, Filter } from './common';
-import * as common from './common';
 import * as input from './input';
-
-/** @internal */
-export type GitHub = ReturnType<typeof github.getOctokit>;
 
 /** @internal */
 export type OctokitOptions = Exclude<
@@ -22,9 +17,9 @@ export type OctokitOptions = Exclude<
  */
 export interface Author {
   node_id: string;
-  html_url: URL;
+  html_url: string;
   login: string;
-  url: URL;
+  url: string;
   id: number;
 }
 
@@ -60,12 +55,12 @@ export interface Release {
   assets: Asset[];
   author: Author;
   name: string;
-  url: URL;
+  url: string;
 
   node_id: string;
-  tarball_url: URL;
-  zipball_url: URL;
-  assets_url: URL;
+  tarball_url: string;
+  zipball_url: string;
+  assets_url: string;
   published_at: string;
   created_at: string;
   body: string;
@@ -79,11 +74,9 @@ export interface AssetOptions {
 }
 
 export interface ReleaseOptions {
-  releaseFilter?: Filter<Release>;
-  assetFilter: Filter<Asset>;
-  prerelease?: boolean;
-  validate?: (tag: string) => boolean;
+  prereleases?: boolean;
   octokit?: OctokitOptions;
+  filter?: Filter<Release>;
   token?: string;
 }
 
@@ -101,42 +94,66 @@ export interface ReleaseOptions {
  * @category GitHub
  */
 export function client(authToken?: string, options?: OctokitOptions) {
-  if (common.isGitHubActions()) {
-    if (!options?.auth) {
-      authToken ||= input.getToken();
-    }
-    if (!authToken && !options?.auth) {
-      throw new Error(`'authToken' or 'options.auth' is required`);
-    }
-    if (authToken && options?.auth) {
-      throw new Error(`Cannot set both 'token' or 'options.auth'`);
-    }
-    return github.getOctokit(authToken ?? '', options);
-  } else {
-    /* TODO: This will be removed once we know we are reliably stable for the
-     * API
-     */
-    common.warn('Not running under GitHub Actions.');
-    common.warn('Unauthenticated instance returned.');
-    return new GitHub();
+  if (!options?.auth) {
+    authToken ||= input.getToken();
   }
+  if (!authToken && !options?.auth) {
+    throw new Error(`'authToken' or 'options.auth' is required`);
+  }
+  if (authToken && options?.auth) {
+    throw new Error(`Cannot set both 'token' or 'options.auth'`);
+  }
+  return github.getOctokit(authToken ?? '', options);
 }
 
+/**
+ * By default [[`ReleaseOptions.token`]] will use [[`semver.validRange`]],
+ * [[`ReleaseOptions.token`]] will call [[`getToken`]]. Additional options can
+ * be passed to the underlying call to `getOctokit`. Prereleases are not
+ * included by default, but can be included by setting
+ * [[`ReleaseOptions.prereleases`]] to `true`. This is equivalent to writing
+ *
+ * ```typescript
+ * const releases = toolkit.releases('owner', 'repo', {
+ *   filter: (release: Release) => {
+ *     return !!toolkit.validRange(release.tag_name, {
+ *       includePrerelease: true
+ *     });
+ *   },
+ * });
+ * ```
+ *
+ * But is instead condensed down into
+ *
+ * ```typescript
+ * const releases = toolkit.releases('owner', 'repo', { prereleases: true });
+ * ```
+ *
+ * As you can see, this is much simpler.
+ *
+ * The [[`ReleaseOptions.prereleases`]] option is not used by custom
+ * user-defined [[`ReleaseOptions.filter`]]s.
+ * @param owner The user or organization of `repo`
+ * @param repo The GitHub repository to look up
+ * @param options Overridable options for finding releases
+ * @returns A list of [[Release]] objects from a github repository.
+ */
 export async function releases(
   owner: string,
   repo: string,
   options?: ReleaseOptions
 ) {
-  const validate = options?.validate ?? valid;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const assetFilter = options?.assetFilter ?? ((_: Asset) => true);
   const token = input.getToken(options?.token);
-  const instance = client(token, options?.octokit);
-  const { data: releases } = await instance.repos.listReleases({ owner, repo });
-  return releases.filter((release) => {
-    const selector = (asset: Asset) => {
-      return assetFilter(asset) && (!release.prerelease || options?.prerelease);
-    };
-    return release.assets.find(selector) && validate(release.tag_name);
-  });
+  const github = client(token, options?.octokit);
+  const prereleases = options?.prereleases ?? false;
+  const filter =
+    options?.filter ??
+    ((item: Release) =>
+      !!validRange(item.tag_name, { includePrerelease: prereleases }));
+  const { data: releases } = await github.repos.listReleases({ owner, repo });
+  return releases.filter((release) => filter(release));
+}
+
+export async function asset(releases: Release[], options?: AssetOptions) {
+  return;
 }

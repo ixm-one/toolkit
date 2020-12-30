@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import * as tool from '@actions/tool-cache';
 import './types';
 
 export type Matcher<T> = string | RegExp | Seeker<T>;
@@ -11,27 +12,18 @@ export function isGitHubActions(): boolean {
 }
 
 export function error(message: string | Error): void {
-  if (isGitHubActions()) {
-    core.error(message);
-  } else {
-    console.error(message);
-  }
+  const module = isGitHubActions() ? core : console;
+  module.error(message);
 }
 
 export function warn(message: string | Error): void {
-  if (isGitHubActions()) {
-    core.warning(message);
-  } else {
-    console.warn(message);
-  }
+  const warning = isGitHubActions() ? core.warning : console.warn;
+  warning(message);
 }
 
 export function debug(message: string): void {
-  if (isGitHubActions()) {
-    core.debug(message);
-  } else {
-    console.debug(message);
-  }
+  const module = isGitHubActions() ? core : console;
+  module.debug(message);
 }
 
 /** @internal simple type constraint */
@@ -62,9 +54,22 @@ export function seeker<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
     return seeker<T>(new RegExp(m, 'i'));
   } else if (isRegExp(m)) {
     return (items: T[]) => {
+      /* istanbul ignore next */
       return items.find((item) => item.name.match(m));
     };
   } else {
     return m;
   }
+}
+
+/**
+ * Simple wrapper around tool-cache/downloadTool to reduce the number of
+ * imports needed.
+ * @param location The URL (as a string) to download into the tool cache
+ * @param dest An optional destination for the downloaded file
+ * @param auth An optional authentication mechanism
+ */
+export async function acquire(location: string, dest?: string, auth?: string) {
+  debug(`Downloading ${location}`);
+  return await tool.downloadTool(location, dest, auth);
 }
