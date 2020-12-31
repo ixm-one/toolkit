@@ -1,6 +1,5 @@
 import * as core from '@actions/core';
 import * as tool from '@actions/tool-cache';
-import './types';
 
 export type Matcher<T> = string | RegExp | Seeker<T>;
 export type Seeker<T> = (items: T[]) => T | undefined;

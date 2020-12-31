@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import type { Asset } from './types';
+import type { Asset } from './github';
 import * as common from './common';
 
 describe('toSeeker', () => {
