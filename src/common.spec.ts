@@ -2,14 +2,14 @@ import * as core from '@actions/core';
 import type { Asset } from './types';
 import * as common from './common';
 
-describe('seeker', () => {
+describe('toSeeker', () => {
   it('should create a function from a string', () => {
-    const seek = common.seeker<Asset>('v1.0.0');
+    const seek = common.toSeeker<Asset>('v1.0.0');
     expect(seek.length).toBe(1);
     expect(seek.name).toBe('');
   });
   it('should create a function from a RegExp', () => {
-    const seek = common.seeker<Asset>(/v1[.]0[.]0/);
+    const seek = common.toSeeker<Asset>(/v1[.]0[.]0/);
     expect(seek.length).toBe(1);
     expect(seek.name).toBe('');
   });
@@ -17,7 +17,7 @@ describe('seeker', () => {
     const fn = (items: Asset[]) => {
       return items.find((item) => item.label.match(/v1[.]0[.]0/));
     };
-    const seek = common.seeker<Asset>(fn);
+    const seek = common.toSeeker<Asset>(fn);
     expect(seek).toBe(fn);
   });
 });

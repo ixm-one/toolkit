@@ -1,12 +1,23 @@
-import * as github from '@actions/github';
 import { coerce, maxSatisfying, SemVer, validRange } from 'semver';
+import { getOctokit } from '@actions/github';
 
-import type { Matcher, Filter } from './common';
+import { Matcher, Filter, toSeeker, Seeker } from './common';
 import * as input from './input';
 
 /** @internal */
+function platformSeeker(options: AssetOptions): Seeker<Asset> {
+  switch (process.platform) {
+    case 'darwin':
+      return toSeeker(options.macos);
+    case 'win32':
+      return toSeeker(options.windows);
+    default:
+      return toSeeker(options.linux);
+  }
+}
+/** @internal */
 export type OctokitOptions = Exclude<
-  Parameters<typeof github.getOctokit>[1],
+  Parameters<typeof getOctokit>[1],
   undefined
 >;
 
@@ -106,7 +117,7 @@ export function client(authToken?: string, options?: OctokitOptions) {
   if (authToken && options?.auth) {
     throw new Error(`Cannot set both 'token' or 'options.auth'`);
   }
-  return github.getOctokit(authToken ?? '', options);
+  return getOctokit(authToken ?? '', options);
 }
 
 /**
@@ -189,6 +200,17 @@ export function select(
   return releases.find((release, _, releases) => find(release, releases));
 }
 
-export async function asset(release: Release, options?: AssetOptions) {
-  return;
+/**
+ * This is used to extract a single asset according to several 'matchers' that
+ * are provided for each possible operating system. Even if a platform is not
+ * being targeted, a dummy value of `key: '.*'` can still be provided. When no
+ * asset is found, this function *will* return `undefined` (as
+ * `Array.prototype.find` does), and this will then be used
+ *
+ * @param release
+ * @param options
+ */
+export async function asset(release: Release, options: AssetOptions) {
+  const seeker = platformSeeker(options);
+  return seeker(release.assets);
 }

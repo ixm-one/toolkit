@@ -44,14 +44,17 @@ function isRegExp(object: unknown): object is RegExp {
  * *is not* a valid `Matcher<T>` and what can be used to seek out a given `T`
  *
  * ```typescript
- *   const m = seeker<Release>(/v1.0.0/);
- *   const m = seeker<Release>("v1.0.0");
+ *   const m = toSeeker<Release>(/v1.0.0/);
+ *   const r = toSeeker<Release>("v1.0.0");
  * ```
+ * When `m` is a `string` a case-insensitive `RegExp` is constructed, and
+ * `toSeeker` is called once more. If `m` is a `RegExp`, a function that matches
+ * against the `Asset.name` property is returned.
  * @internal
  */
-export function seeker<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
+export function toSeeker<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
   if (isString(m)) {
-    return seeker<T>(new RegExp(m, 'i'));
+    return toSeeker<T>(new RegExp(m, 'i'));
   } else if (isRegExp(m)) {
     return (items: T[]) => {
       /* istanbul ignore next */
