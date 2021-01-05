@@ -33,7 +33,7 @@
     "build-and-check": "npm run build && npm run lint",
     "fix": "npm run check -- --fix",
     "test": "jest --coverage --detectOpenHandles",
-    "docs": "typedoc src"
+    "docs": "typedoc"
   },
   "devDependencies": {
     "@actions/core": "^1.2.6",
@@ -94,6 +94,8 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "testTimeout": 10000,
-    "setupFiles": ["dotenv/config"]
+    "setupFiles": [
+      "dotenv/config"
+    ]
   }
 }

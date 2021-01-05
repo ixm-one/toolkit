@@ -25,7 +25,7 @@ export type OctokitOptions = Exclude<
  * A minimal definition of the author JSON object found within a Release
  * response.
  */
-export interface Author {
+interface Author {
   node_id: string;
   html_url: string;
   login: string;
@@ -37,6 +37,7 @@ export interface Author {
  * A GitHub asset found within a release. This is the minimum interface an
  * object needs to be considered an Asset, however this is because getting the
  * actual types *out* of Octokit.js is painful.
+ * @category GitHub
  */
 export interface Asset {
   browser_download_url: string;
@@ -57,6 +58,7 @@ export interface Asset {
  * Represents the interface of an object representing a GitHub Release. These
  * differ from simple tags, as a GitHub release is a specific type of tag with
  * accompanying metadata and potentially binary assets
+ * @category GitHub
  */
 export interface Release {
   target_commitish: string;
@@ -90,7 +92,7 @@ export interface ReleaseOptions {
   token?: string;
 }
 
-type SelectPredicate =
+export type SelectPredicate =
   | ((release: Release) => boolean)
   | ((release: Release, releases: Release[]) => boolean);
 
@@ -104,7 +106,7 @@ type SelectPredicate =
  * environment variable. When *not* running under GitHub actions, this fallback
  * is ignored and an unauthenticated client might result instead.
  * @param options These are passed through nearly untouched to the underlying
- * [[GitHub]] client.
+ * call to `getOctokit`.
  * @category GitHub
  */
 export function client(authToken?: string, options?: OctokitOptions) {
@@ -151,6 +153,7 @@ export function client(authToken?: string, options?: OctokitOptions) {
  * @param repo The GitHub repository to look up
  * @param options Overridable options for finding releases
  * @returns A list of [[Release]] objects from a github repository.
+ * @category GitHub
  */
 export async function releases(
   owner: string,

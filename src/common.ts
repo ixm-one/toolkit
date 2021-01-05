@@ -10,16 +10,19 @@ export function isGitHubActions(): boolean {
   return process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
 }
 
+/** @category Logging */
 export function error(message: string | Error): void {
   const module = isGitHubActions() ? core : console;
   module.error(message);
 }
 
+/** @category Logging */
 export function warn(message: string | Error): void {
   const warning = isGitHubActions() ? core.warning : console.warn;
   warning(message);
 }
 
+/** @category Logging */
 export function debug(message: string): void {
   const module = isGitHubActions() ? core : console;
   module.debug(message);
@@ -70,6 +73,7 @@ export function toSeeker<T extends { name: string }>(m: Matcher<T>): Seeker<T> {
  * @param location The URL (as a string) to download into the tool cache
  * @param dest An optional destination for the downloaded file
  * @param auth An optional authentication mechanism
+ * @category Common
  */
 export async function acquire(location: string, dest?: string, auth?: string) {
   debug(`Downloading ${location}`);

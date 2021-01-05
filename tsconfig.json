@@ -11,9 +11,12 @@
   },
   "exclude": ["node_modules", "**/*.spec.ts", "dist"],
   "typedocOptions": {
-    "inputFiles": ["./src/index.ts"],
+    "name": "IXM Toolkit",
+    "entryPoints": ["src/index.ts"],
     "exclude": "**/**.spec.ts",
-    "mode": "modules",
-    "out": "dist/docs"
+
+
+    "out": "dist/docs",
+    "hideGenerator": true
   }
 }

@@ -9,7 +9,7 @@ type VersionValidator = (version: string) => boolean;
  * string representing the input `github-token` or the value of the
  * `$GITHUB_TOKEN` environment variable.
  * @param input An optional action input to lookup instead of `github-token`
- * @category GitHub
+ * @category Action Input
  */
 export function getToken(input?: string) {
   const token = core.getInput(input || 'github-token');
@@ -25,6 +25,7 @@ export function getToken(input?: string) {
  * @param tool The expected name of the tool to get (e.g., `hugo-version`)
  * @param validator An optional validator to use against the input. By default,
  * this will use the semver `valid` function
+ * @category Action Input
  */
 export function getToolVersion(tool: string, validator?: VersionValidator) {
   validator ??= (version: string): boolean => {
