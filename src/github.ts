@@ -176,7 +176,25 @@ export async function releases(
  * versions that cannot be coerced to SemVer. These instances are fairly rare,
  * as SemVer as a coerce-able format is more common than the semantics that
  * SemVer expects.
+ *
+ * The default implementation of `predicate` is equivalent to
+ * (but not implemented as)
+ * ```typescript
+ * function (release: Release) {
+ *   const version = toolkit.getToolVersion(toolName) || '*';
+ *   const versions = releases
+ *     .map((release) => coerce(release.tag_name))
+ *     .filter((version): version is SemVer => version !== null);
+ *   const max = maxSatisfying(versions, version);
+ *   const tag = coerce(release.tag_name) as NonNullable<SemVer>;
+ *   return max?.version === tag.version;
+ * }
+ * ```
+ *
+ * If this implementation does *not* meet your requirements, its recommened to
+ * write and test your own.
  * @param releases A list of releases from which to select a single one from
+ * @param predicate Selection predicate. An implementation is provided if absent
  */
 export function select(
   releases: Release[],
