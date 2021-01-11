@@ -10,19 +10,31 @@ export function isGitHubActions(): boolean {
   return process.env.CI === 'true' && process.env.GITHUB_ACTIONS === 'true';
 }
 
-/** @category Logging */
+/**
+ * When running under GitHub Actions, this will print a GitHub Actions error.
+ * When *not* under GitHub Actions, `console.error` is used instead.
+ * @category Logging
+ */
 export function error(message: string | Error): void {
   const module = isGitHubActions() ? core : console;
   module.error(message);
 }
 
-/** @category Logging */
+/**
+ * When running under GitHub Actions, this will print a GitHub Actions logging
+ * warning. When *not* under GitHub Actions, `console.warn` is used instead.
+ * @category Logging
+ */
 export function warn(message: string | Error): void {
   const warning = isGitHubActions() ? core.warning : console.warn;
   warning(message);
 }
 
-/** @category Logging */
+/**
+ * When running under GitHub Actions, this will print a GitHub Actions debug
+ * message. When *not* under GitHub Actions, `console.debug` is used instead.
+ * @category Logging
+ */
 export function debug(message: string): void {
   const module = isGitHubActions() ? core : console;
   module.debug(message);
