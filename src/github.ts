@@ -42,7 +42,7 @@ interface Author {
 export interface Asset {
   browser_download_url: string;
   node_id: string;
-  label: string;
+  label: string | null;
   state: string;
   name: string;
   download_count: number;
@@ -65,17 +65,17 @@ export interface Release {
   prerelease: boolean;
   tag_name: string;
   assets: Asset[];
-  author: Author;
-  name: string;
+  author: Author | null;
+  name: string | null;
   url: string;
 
   node_id: string;
-  tarball_url: string;
-  zipball_url: string;
+  tarball_url: string | null;
+  zipball_url: string | null;
   assets_url: string;
-  published_at: string;
+  published_at: string | null;
   created_at: string;
-  body: string;
+  body?: string | null;
   id: number;
 }
 

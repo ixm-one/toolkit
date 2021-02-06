@@ -15,7 +15,7 @@ describe('toSeeker', () => {
   });
   it('should return the same function given', () => {
     const fn = (items: Asset[]) => {
-      return items.find((item) => item.label.match(/v1[.]0[.]0/));
+      return items.find((item) => item.label?.match(/v1[.]0[.]0/));
     };
     const seek = common.toSeeker<Asset>(fn);
     expect(seek).toBe(fn);
