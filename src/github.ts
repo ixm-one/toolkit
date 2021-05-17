@@ -167,7 +167,10 @@ export async function releases(
     options?.filter ??
     ((item: Release) =>
       !!validRange(item.tag_name, { includePrerelease: prereleases }));
-  const { data: releases } = await github.repos.listReleases({ owner, repo });
+  const { data: releases } = await github.rest.repos.listReleases({
+    owner,
+    repo,
+  });
   return releases.filter((release) => filter(release));
 }
 

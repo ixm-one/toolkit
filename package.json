@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "check": "npm run build -- --noEmit && npm run lint",
+    "check": "npm run build -- --noEmit && npm run lint --",
     "lint": "eslint src --ext .ts",
     "build-and-check": "npm run build && npm run lint",
     "fix": "npm run check -- --fix",
