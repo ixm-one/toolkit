@@ -4,6 +4,7 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/audit.yml
       - 'src/**.ts'
       - 'package-lock.json'
       - 'package.json'

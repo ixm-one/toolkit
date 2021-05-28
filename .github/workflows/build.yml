@@ -11,6 +11,8 @@ on:
   pull_request:
     paths:
       - 'src/**.ts'
+      - package-lock.json
+      - package.json
 jobs:
   build:
     name: Build and Check
