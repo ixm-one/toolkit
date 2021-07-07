@@ -43,7 +43,7 @@
     "@actions/tool-cache": "^1.7.1",
     "@types/eslint": "7.2.13",
     "@types/eslint-plugin-prettier": "3.1.0",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^26.0.24",
     "@types/node": "^16.0.0",
     "@types/prettier": "2.3.1",
     "@types/semver": "7.3.7",
